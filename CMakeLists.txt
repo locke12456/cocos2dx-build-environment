@@ -90,6 +90,7 @@ if(CMAKE_BUILD_TYPE STREQUAL "Debug")
 ENDIF()
 	
 LINK_DIRECTORIES(${CMAKE_SOURCE_DIR}/cocos2d/external/bullet/prebuilt/${PLATFORM_FOLDER}/${LINK_LIB_FOLDER}/)
+LINK_DIRECTORIES(${CMAKE_SOURCE_DIR}/cocos2d/external/lua/luajit/prebuilt/${PLATFORM_FOLDER}/)
 
 # libcocos2d
 set(BUILD_CPP_EMPTY_TEST OFF CACHE BOOL "turn off build cpp-empty-test")
@@ -145,11 +146,16 @@ include_directories(
 	/usr/local/include/GLFW
 	/usr/include/GLFW
 	${COCOS2D_ROOT}
+	${COCOS2D_ROOT}/cocos/scripting/lua-bindings/manual
+	${COCOS2D_ROOT}/cocos/scripting/lua-bindings/auto
+	${COCOS2D_ROOT}/external/lua/tolua
+	${COCOS2D_ROOT}/external/lua/lua
 	${COCOS2D_ROOT}/cocos
 	${COCOS2D_ROOT}/external
 	${COCOS2D_ROOT}/cocos/platform
 	${COCOS2D_ROOT}/cocos/editor-support
 	${COCOS2D_ROOT}/cocos/audio/include/
+	creator_to_cocos2dx/creator_project/packages/creator-luacpp-support/reader
 	Classes
 )
 if ( WINDOWS )
@@ -166,7 +172,8 @@ endif ()
 SET (CURRENT_DIR ${CMAKE_SOURCE_DIR})
 INCLUDE ( cmake/make_group.cmake )
 FILE( GLOB_RECURSE base
-        Classes/reader/*.cpp
+        creator_to_cocos2dx/creator_project/packages/creator-luacpp-support/reader/*.cpp
+        creator_to_cocos2dx/creator_project/packages/creator-luacpp-support/reader/*/*.cpp
 	 )
 
 MakeGroup( "base" "reader" "CURRENT_DIR" )
@@ -192,8 +199,7 @@ elseif(MSVC)
 else()
     add_executable(${APP_NAME} ${GAME_SRC} ${GAME_HEADERS})
 endif()
-target_link_libraries(${APP_NAME} cocos2d)
-
+target_link_libraries(${APP_NAME} cocos2d luacocos2d)
 
 if(MSVC)
 
@@ -217,6 +223,11 @@ if(MSVC)
 		"${COCOS2D_ROOT}/external/${PLATFORM_FOLDER}-specific/OpenalSoft/prebuilt/OpenAL32.dll"
 		"${COCOS2D_ROOT}/external/${PLATFORM_FOLDER}-specific/icon/prebuilt/iconv.dll"
 		"${COCOS2D_ROOT}/external/tiff/prebuilt/${PLATFORM_FOLDER}/libtiff.dll"
+		"${CMAKE_SOURCE_DIR}/cocos2d/external/lua/luajit/prebuilt/${PLATFORM_FOLDER}/lua51.dll"
+		"${CMAKE_SOURCE_DIR}/cocos2d/external/websockets/prebuilt/${PLATFORM_FOLDER}/websockets.dll"
+		"${CMAKE_SOURCE_DIR}/cocos2d/external/curl/prebuilt/${PLATFORM_FOLDER}/curl.dll"
+		"${CMAKE_SOURCE_DIR}/cocos2d/external/openssl/prebuilt/${PLATFORM_FOLDER}/libssl-1_1.dll"
+		"${CMAKE_SOURCE_DIR}/cocos2d/external/openssl/prebuilt/${PLATFORM_FOLDER}/libcrypto-1_1.dll"
 	)
 	
 	list(SORT THIRD_PARTY_DLLS)
